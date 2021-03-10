@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: cloud-grpc-server
+
+
+---
+spring:
+  profiles: local
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        namespace: bae0b23a-856c-4d76-9dfe-c2522ddc71e8
+        file-extension: yml
+
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 127.0.0.1:10001
+
+

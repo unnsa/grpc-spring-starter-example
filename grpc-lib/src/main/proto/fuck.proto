@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.unn.grpc.examples.lib";
+option java_outer_classname = "FuckProto";
+
+// The greeting service definition.
+service FuckGrpcStarter {
+  // Sends a greeting
+  rpc fuck (FuckRequest) returns (FuckResponse) {
+  }
+}
+
+// The request message containing the user's name.
+message FuckRequest {
+  string name = 2;
+  string firstName = 1;
+  string laseName = 3;
+}
+
+// The response message containing the greetings
+message FuckResponse {
+  string fuckWho = 1;
+}

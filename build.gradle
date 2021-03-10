@@ -1,0 +1,103 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    ext {
+        projectVersion = '1.0-SNAPSHOT'
+        springBootGrpcVersion = '2.11.0.RELEASE'
+        grpcClientSpringBootStarter = '2.11.0.RELEASE'
+        springBootVersion = '2.3.8.RELEASE'
+        springCloudVersion = 'Hoxton.SR9'
+        protobufVersion = '3.14.0'
+        protobufGradlePluginVersion = '0.8.12'
+        grpcVersion = '1.35.0'
+        springCloudStarterAlibabaSentinel = '2.2.5.RELEASE'
+        sentinelGrpcAdapter = '1.8.0'
+        springCloudStarterAlibabaNacos = '2.1.1.RELEASE'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'org.springframework.boot' version "${springBootVersion}" apply false
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'io.franzbecker.gradle-lombok' version '4.0.0' apply false
+    id 'com.google.protobuf' version '0.8.14'
+}
+
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+
+    compileJava {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        options.encoding = 'UTF-8'
+    }
+
+    compileJava.options*.compilerArgs = [
+            '-Xlint:all', '-Xlint:-processing'
+    ]
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    buildscript {
+        repositories {
+            mavenCentral()
+        }
+    }
+}
+
+
+allprojects { project ->
+    buildscript {
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+                mavenBom "com.google.protobuf:protobuf-bom:${protobufVersion}"
+                mavenBom "io.grpc:grpc-bom:${grpcVersion}"
+                mavenBom "org.junit:junit-bom:5.7.0"
+            }
+        }
+
+        ext {
+            micrometerVersion = dependencyManagement.importedProperties['micrometer.version']
+            // not explicitly needed in subprojects, as the BOM for Sprint Boot sets this version
+            springFrameworkVersion = dependencyManagement.importedProperties['spring-framework.version']
+            springSecurityVersion = dependencyManagement.importedProperties['spring-security.version']
+            springCloudCommonsVersion = dependencyManagement.importedProperties['spring-cloud-commons.version']
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+        testLogging {
+            // failFast = true
+            // showStandardStreams = true
+            exceptionFormat = 'full'
+            showCauses = true
+            showExceptions = true
+            showStackTraces = true
+            // prints out individual test progress by hooking into junit engine events
+            // it.events('passed', 'skipped', 'failed', 'standard_out')
+            it.events('passed', 'skipped', 'failed')
+
+            it.debug { dbg ->
+                // prints out individual test progress when run under the debugger
+                // dbg.events('started', 'failed', 'passed', 'skipped', 'standard_error', 'standard_out')
+                dbg.events('started', 'failed', 'passed', 'skipped')
+            }
+        }
+    }
+
+}
+
+group = 'com.unn'
+version = projectVersion

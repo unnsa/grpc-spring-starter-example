@@ -1,0 +1,5 @@
+rootProject.name = 'grpc-spring-starter-example'
+include 'grpc-lib'
+include 'fuck-server'
+include 'fuck-client'
+
