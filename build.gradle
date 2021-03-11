@@ -74,6 +74,7 @@ allprojects { project ->
             springSecurityVersion = dependencyManagement.importedProperties['spring-security.version']
             springCloudCommonsVersion = dependencyManagement.importedProperties['spring-cloud-commons.version']
         }
+
     }
 
     test {
@@ -95,6 +96,15 @@ allprojects { project ->
                 dbg.events('started', 'failed', 'passed', 'skipped')
             }
         }
+    }
+
+}
+
+subprojects{ subproject ->
+
+    dependencies{
+        annotationProcessor 'org.projectlombok:lombok:1.18.12'
+        compileOnly 'org.projectlombok:lombok:1.18.12'
     }
 
 }
